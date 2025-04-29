@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Radon Image Reconstruction</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #4f8cff 0%, #a6ffcb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .glass-card {
+            background: rgba(255,255,255,0.18);
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.18);
+            padding: 48px 36px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.3rem;
+            margin-bottom: 0.5em;
+            color: #292929;
+            letter-spacing: 1.2px;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #444;
+            margin-bottom: 2em;
+        }
+        .file-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1.5em;
+        }
+        .file-upload input[type="file"] {
+            display: none;
+        }
+        .file-upload label {
+            background: linear-gradient(90deg, #4f8cff 0%, #a6ffcb 100%);
+            color: #fff;
+            padding: 12px 32px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 1em;
+            transition: background 0.3s;
+            display: inline-block;
+        }
+        .file-upload label:hover {
+            background: linear-gradient(90deg, #a6ffcb 0%, #4f8cff 100%);
+        }
+        .file-upload .filename {
+            color: #333;
+            font-size: 0.95rem;
+            margin-top: 0.5em;
+            font-style: italic;
+        }
+        button {
+            background: linear-gradient(90deg, #4f8cff 0%, #a6ffcb 100%);
+            color: #fff;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 1em;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #a6ffcb 0%, #4f8cff 100%);
+        }
+        .error {
+            color: #ff5252;
+            margin-bottom: 1em;
+            font-weight: bold;
+        }
+        .how-it-works {
+            margin-top: 2em;
+            background: rgba(255,255,255,0.10);
+            padding: 1.5em 1em;
+            border-radius: 18px;
+            color: #222;
+            font-size: 1rem;
+        }
+        @media (max-width: 600px) {
+            .glass-card {
+                padding: 24px 8px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-card">
+        <h1>Radon Image <br>Reconstruction</h1>
+        <div class="subtitle">
+            Upload an image to see its Radon transform and reconstruction in style!
+        </div>
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        <form action="/process" method="post" enctype="multipart/form-data" id="uploadForm">
+            <div class="file-upload">
+                <label for="fileInput">Choose Image</label>
+                <input type="file" id="fileInput" name="image" accept="image/*" required>
+                <span class="filename" id="filename"></span>
+            </div>
+            <button type="submit">Process Image</button>
+        </form>
+        <div class="how-it-works">
+            <strong>How it works:</strong>
+            <ol style="text-align:left; margin: 1em 0 0 1em;">
+                <li>Image is converted to grayscale and resized for speed.</li>
+                <li>Radon transform creates a sinogram.</li>
+                <li>Inverse Radon reconstructs the image.</li>
+            </ol>
+        </div>
+    </div>
+    <script>
+        // Show selected filename
+        const fileInput = document.getElementById('fileInput');
+        const filename = document.getElementById('filename');
+        const label = document.querySelector('label[for="fileInput"]');
+        fileInput.addEventListener('change', function() {
+            if (fileInput.files.length > 0) {
+                filename.textContent = fileInput.files[0].name;
+                label.textContent = "Change Image";
+            } else {
+                filename.textContent = '';
+                label.textContent = "Choose Image";
+            }
+        });
+    </script>
+</body>
+</html>
